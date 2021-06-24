@@ -20,7 +20,7 @@ node {
     }
         
     stage ('Install') {
-        rtMaven.run pom: 'maven-example/pom.xml', goals: 'install', buildInfo: buildInfo
+        rtMaven.run pom: 'docker-example/pom.xml', goals: 'install', buildInfo: buildInfo
     }
  
     stage ('Deploy') {
