@@ -109,7 +109,7 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
-	<distributionManagement>
+	<!--<distributionManagement>
 		<snapshotRepository>
 			<id>snapshots</id>
 			<name>fbaa000a9997-snapshots</name>
@@ -120,6 +120,6 @@
 			<name>fbaa000a9997-releases</name>
 			<url>http://localhost:8081/artifactory/libs-release-local</url>
 		</repository>
-	</distributionManagement>
+	</distributionManagement>-->
 
 </project>
