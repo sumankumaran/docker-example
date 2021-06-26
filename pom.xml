@@ -109,17 +109,17 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
-	<!--<distributionManagement>
+	<distributionManagement>
 		<snapshotRepository>
 			<id>snapshots</id>
-			<name>fbaa000a9997-snapshots</name>
+			<name>libs-snapshot-local</name>
 			<url>http://localhost:8081/artifactory/libs-snapshot-local</url>
 		</snapshotRepository>
 		<repository>
 			<id>central</id>
-			<name>fbaa000a9997-releases</name>
+			<name>libs-snapshot-local</name>
 			<url>http://localhost:8081/artifactory/libs-release-local</url>
 		</repository>
-	</distributionManagement>-->
+	</distributionManagement>
 
 </project>
