@@ -25,8 +25,8 @@ pipeline {
                 rtMavenResolver (
                     id: "MAVEN_RESOLVER",
                     serverId: "Artifactory Server",
-                    releaseRepo: "virtual-repo",
-                    snapshotRepo: "virtual-repo"
+                    releaseRepo: "maven-virtual-repo",
+                    snapshotRepo: "maven-virtual-repo"
                 )
             }
         }
