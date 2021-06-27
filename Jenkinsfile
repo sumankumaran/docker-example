@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage ('Code checkout') {
             steps {
-                git url: "https://github.com/jfrog/project-examples.git"
+                git url: "https://github.com/sumankumaran/docker-example.git"
             }
         }
 
