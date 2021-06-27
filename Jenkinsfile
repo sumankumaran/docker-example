@@ -1,63 +1,54 @@
-node {
-    def server
-    def buildInfo
-    def rtMaven
-
-    stage ('Code checkout') {
-        git url: 'https://github.com/sumankumaran/docker-example.git'
-    }
-
-    stage ('Artifactory configuration') {
-        server = Artifactory.server "Artifactory Server"
-
-        rtMaven = Artifactory.newMavenBuild()
-        rtMaven.tool = "Maven 3.6"
-        rtMaven.deployer releaseRepo: "libs-release-local", snapshotRepo: "libs-snapshot-local", server: server
-        rtMaven.resolver releaseRepo: "virtual-repo", snapshotRepo: "virtual-repo", server: server
-        rtMaven.deployer.deployArtifacts = true // Disable artifacts deployment during Maven run
-
-        buildInfo = Artifactory.newBuildInfo()
-    }
-
-    stage ('Maven Build') {
-        rtMaven.run pom: 'pom.xml', goals: 'install', buildInfo: buildInfo
-    }
-
-    stage ('Maven Deploy') {
-        rtMaven.deployer.deployArtifacts buildInfo
-    }
-
-    stage ('Publish build info') {
-        server.publishBuildInfo buildInfo
-    }
- }
-    pipeline{
-    environment {
-        registry = "https://hub.docker.com/kumarakuruparans"
-        registryCredential = 'docker_cred'
-        dockerImage = ''
-    }
-    stage('Docker Build') {
-        steps {
-            script {
-                dockerImage = docker.build registry + ":$BUILD_NUMBER"
+pipeline {
+    agent any
+    stages {
+        stage ('Code checkout') {
+            steps {
+                git url: "https://github.com/jfrog/project-examples.git"
             }
         }
-    }
 
-   stage('Docker Deploy') {
-        steps {
-            script {
-                docker.withRegistry( '', registryCredential ) {
-                    dockerImage.push()
-                }
+        stage ('Artifactory configuration') {
+            steps {
+                rtServer (
+                    id: "Artifactory Server",
+                    url: http://localhost:8081/artifactory,
+                    credentialsId: "afdc4547-39a9-40d7-8a73-6fe5415e4133"
+                )
+
+                rtMavenDeployer (
+                    id: "MAVEN_DEPLOYER",
+                    serverId: "Artifactory Server",
+                    releaseRepo: "libs-release-local",
+                    snapshotRepo: "libs-snapshot-local"
+                )
+
+                rtMavenResolver (
+                    id: "MAVEN_RESOLVER",
+                    serverId: "Artifactory Server",
+                    releaseRepo: "virtual-repo",
+                    snapshotRepo: "virtual-repo"
+                )
             }
         }
-    }
 
-    stage('Cleaning up') {
-        steps {
-            sh "docker rmi $registry:$BUILD_NUMBER"
+        stage ('Maven Build') {
+            steps {
+                rtMavenRun (
+                    tool: "Maven 3.6",
+                    pom: 'pom.xml',
+                    goals: 'clean package',
+                    deployerId: "MAVEN_DEPLOYER",
+                    resolverId: "MAVEN_RESOLVER"
+                )
+            }
+        }
+
+        stage ('Maven Deploy') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "Artifactory Server"
+                )
+            }
         }
     }
 }
