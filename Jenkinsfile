@@ -12,9 +12,9 @@ node {
 
         rtMaven = Artifactory.newMavenBuild()
         rtMaven.tool = "Maven 3.6"
-        //rtMaven.deployer releaseRepo: "libs-release-local", snapshotRepo: "libs-snapshot-local", server: server
-        //rtMaven.resolver releaseRepo: "libs-release-local", snapshotRepo: "libs-snapshot-local", server: server
-        //rtMaven.deployer.deployArtifacts = true // Disable artifacts deployment during Maven run
+        rtMaven.deployer releaseRepo: "libs-release-local", snapshotRepo: "libs-snapshot-local", server: server
+        rtMaven.resolver releaseRepo: "virtual-repo", snapshotRepo: "virtual-repo", server: server
+        rtMaven.deployer.deployArtifacts = true // Disable artifacts deployment during Maven run
 
         buildInfo = Artifactory.newBuildInfo()
     }
