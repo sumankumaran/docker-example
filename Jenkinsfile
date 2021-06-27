@@ -2,8 +2,14 @@ node {
     def server
     def buildInfo
     def rtMaven
+
+    environment {
+            registry = "https://hub.docker.com/kumarakuruparans"
+            registryCredential = 'docker_cred'
+            dockerImage = ''
+        }
     
-    stage ('Clone') {
+    stage ('Code checkout') {
         git url: 'https://github.com/sumankumaran/docker-example.git'
     }
  
@@ -19,15 +25,39 @@ node {
         buildInfo = Artifactory.newBuildInfo()
     }
         
-    stage ('Install') {
+    stage ('Maven Build') {
         rtMaven.run pom: 'pom.xml', goals: 'install', buildInfo: buildInfo
     }
  
-    stage ('Deploy') {
+    stage ('Maven Deploy') {
         rtMaven.deployer.deployArtifacts buildInfo
     }
         
     stage ('Publish build info') {
         server.publishBuildInfo buildInfo
+    }
+
+    stage('Docker Build') {
+        steps {
+            script {
+                dockerImage = docker.build registry + ":$BUILD_NUMBER"
+            }
+        }
+    }
+
+   stage('Docker Deploy') {
+        steps {
+            script {
+                docker.withRegistry( '', registryCredential ) {
+                    dockerImage.push()
+                }
+            }
+        }
+    }
+
+    stage('Cleaning up') {
+        steps {
+            sh "docker rmi $registry:$BUILD_NUMBER"
+        }
     }
 }
