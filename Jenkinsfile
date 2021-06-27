@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    environment {
+        registry = "https://hub.docker.com/kumarakuruparans"
+        registryCredential = 'docker_cred'
+        dockerImage = ''
+     }
     stages {
         stage ('Code checkout') {
             steps {
@@ -50,5 +55,28 @@ pipeline {
                 )
             }
         }
+        stage('Docker Build') {
+                steps {
+                    script {
+                        dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                    }
+                }
+         }
+
+         stage('Docker Deploy') {
+                 steps {
+                     script {
+                         docker.withRegistry( '', registryCredential ) {
+                             dockerImage.push()
+                         }
+                     }
+                 }
+         }
+
+         stage('Clean up') {
+                 steps {
+                     sh "docker rmi $registry:$BUILD_NUMBER"
+                 }
+         }
     }
 }
