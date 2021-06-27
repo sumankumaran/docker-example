@@ -11,7 +11,7 @@ pipeline {
             steps {
                 rtServer (
                     id: "Artifactory Server",
-                    url: http://localhost:8081/artifactory,
+                    url: "http://localhost:8081/artifactory",
                     credentialsId: "afdc4547-39a9-40d7-8a73-6fe5415e4133"
                 )
 
