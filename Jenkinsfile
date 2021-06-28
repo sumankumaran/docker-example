@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        registry = "https://hub.docker.com/kumarakuruparans/docker-example"
+        registry = "kumarakuruparans/docker-example"
         registryCredential = 'docker_cred'
         dockerImage = ''
      }
@@ -66,8 +66,9 @@ pipeline {
          stage('Docker Deploy') {
                  steps {
                      script {
-                         docker.withRegistry( '', registryCredential ) {
-                             dockerImage.push()
+                         docker.withRegistry( 'https://hub.docker.com/', registryCredential ) {
+                             dockerImage.push("latest")
+                             dockerImage.push("$BUILD_NUMBER")
                          }
                      }
                  }
