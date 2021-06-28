@@ -58,7 +58,7 @@ pipeline {
         stage('Docker Build') {
                 steps {
                     script {
-                        dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                        dockerImage = docker.build("kumarakuruparans/docker-example:$BUILD_NUMBER")
                     }
                 }
          }
