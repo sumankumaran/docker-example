@@ -62,7 +62,7 @@ pipeline {
                                 script: 'mvn org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.build.finalName -q -DforceStdout',
                                 returnStdout: true
                             )
-                        ARTIFACT_NAME = sh (
+                        ARTIFACT_VERSION = sh (
                                         script: 'mvn org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout',
                                         returnStdout: true
                                     )
