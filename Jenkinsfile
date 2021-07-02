@@ -80,7 +80,7 @@ pipeline {
                      script {
                          docker.withRegistry( 'https://registry.hub.docker.com/', registryCredential ) {
                              dockerImage.push("latest")
-                             dockerImage.push("$BUILD_NUMBER")
+                             dockerImage.push("$ARTIFACT_VERSION")
                          }
                      }
                  }
@@ -88,7 +88,7 @@ pipeline {
 
          stage('Clean up') {
                  steps {
-                     sh "docker rmi $registry:$BUILD_NUMBER"
+                     sh "docker rmi $registry:$ARTIFACT_VERSION"
                  }
          }
     }
