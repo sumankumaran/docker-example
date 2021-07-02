@@ -4,6 +4,6 @@ ARG JAR_FILE=target/docker-example.jar
 
 #WORKDIR /opt/app
 
-COPY ${JAR_FILE} .
+COPY target/${JAR_FILE} /opt/app/docker-example.jar
 
 ENTRYPOINT ["java","-jar","docker-example.jar"]
